@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<!--
+  Copyright 2020 IBM All Rights Reserved.
+
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+ -->
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>ACME Stock Co Clients</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="font-awesome-5.1.2/css/all.css">
+  <script src="font-awesome-5.1.2/js/all.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"  crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"  crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="banner-txt-bold float-left"><span>
+              <h6>ACME Stock Co</h6>
+            </span></div>
+        </div>
+
+        <div class="col-md-8">
+          <div class="banner-txt float-right"><span> <i class="fas fa-user" style="color:white"></i></span><span>&nbsp;&nbsp;Demo User</span>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span> <i class="fas fa-cog" style="color:white"></i></span><span>&nbsp;&nbsp;Settings</span>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span> <i class="fas fa-question" style="color:white"></i></span><span>&nbsp;&nbsp;Help</span>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span><a href="/tradr/logout" style="color:white"><span> <i class="fas fa-sign-out-alt"></i></span><span>&nbsp;&nbsp;Logout</span></a></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Modal -->
+  <div class="modal fade" id="addClientModal" tabindex="-1" role="dialog" aria-labelledby="addClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addClientModalLabel">Add client</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form id="createClientForm" class="needs-validation" novalidate>
+          <div class="modal-body">
+
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input id="firstName" type="text" name="firstName" pattern="^[A-Z][0-9a-zA-Z .,'-]*$" class="form-control" required />
+
+              <div class="invalid-feedback">
+                Please enter a validate first name.
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input id="lastName" type="text" name="lastName" pattern="^[A-Z][0-9a-zA-Z .,'-]*$" class="form-control" required />
+
+              <div class="invalid-feedback">
+                Please enter a valid last name.
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="email">Email address</label>
+              <input id="email" name="email" type="email" class="form-control" required />
+
+              <div class="invalid-feedback">
+                Please enter a valid email address.
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="phoneNumber">Phone number</label>
+              <input id="phoneNumber" name="phoneNumber" type="text" pattern="^(\(?\+?[0-9]*\)?)?[0-9_\- \(\)]*$" class="form-control" required />
+              <div class="invalid-feedback">
+                Please provide a valid phone number.
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="contactSelect">Preferred Contact Method</label>
+
+          <select id="preferredContactMethodSelect" class="selectpicker form-control"  data-width="100%">
+            <option value="text" selected>Text Message</option>
+            <option value="phone">Telephone</option>
+            <option value="email">Email</option>
+          </select>
+            </div>
+            <div class="form-group">
+              <span id="create-error" class="text-danger"></span>
+            </div>
+
+          </div>
+
+          <div class="modal-footer">
+
+            <button id="saveClientBtn" type="button" class="btn btn-primary">Save</button>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container">
+    <div class="row"><span>&nbsp;</span>
+    </div>
+    <div class="row mb-3">
+      <h2 style="color:#1b2e4e">Dashboard</h2>
+    </div>
+    <div class="row">
+      <div class="col-md-7">
+        <div class="container mx-0 px-0">
+          <div class="col-md-12">
+            <div class="border shadow-lg bg-light rounded">
+              <div class="container mx-0 px-0">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="float-left pt-4 px-3">
+                      <h6 style="color:#1b2e4e; font-weight:bold">Clients</h6>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="float-right pt-3 pb-3 px-3">
+                      <button class="btn btn-primary" data-toggle="modal" data-target="#addClientModal">
+                        Add Client <i class="fas fa-plus-circle" style="color: #fff"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="custom-hr-dark mx-2">.</div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="mx-2">
+                      <table id="clients" class="display" style="width:100%">
+                        <thead>
+                          <tr>
+                            <th class="text-center">Portfolio ID</th>
+                            <th class="text-center">Client</th>
+                            <th class="text-left">Total Assets</th>
+                            <th class="text-center">Tier</th>
+
+                          </tr>
+                        </thead>
+
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="container mx-0 px-0">
+          <div class="col-md-12 border shadow bg-light rounded">
+            <div class="row pt-3 px-3">
+              <h6 style="color:#1b2e4e; font-weight:bold">Dow Jones Industrial Average</h6>
+            </div>
+            <div class="row pt-6">
+              <div class="col-md-12">
+                <div class="custom-hr-dark">.</div>
+              </div>
+            </div>
+
+            <div class="row pt-3">
+              <div class="col-md-12 text-center">
+                <div class="djia"><%=djia%></div>
+              </div>
+            </div>
+            <div class="row pt-3">
+              <div class="col-md-12 text-center">
+                <div class="djia-vol">
+                  <p class="text-center">Volume: <%=volume%></p>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="custom-hr-light">.</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 text-right">
+                <h5>Open</h5>
+              </div>
+
+              <div class="col-md-6 text-left">
+                <span><%=open%></span>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 text-right">
+                <h5>High</h5>
+              </div>
+
+              <div class="col-md-6 text-left">
+                <span><%=high%></span>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 text-right">
+                <h5>Low</h5>
+              </div>
+
+              <div class="col-md-6 text-left">
+                <span><%=low%></span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 pt-3 pb-3" style="background-color: #f1f4f4; font:smaller">
+                <span>INDEXDJX: .DJI - Retrieved <%=timestamp%></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function() {
+      'use strict';
+      window.addEventListener('load', function() {
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.getElementsByClassName('needs-validation');
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+          form.addEventListener('submit', function(event) {
+            if (form.checkValidity() === false) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+          }, false);
+        });
+      }, false);
+    })();
+  </script>
+
+
+  <script>
+
+    const currencyFormatter = new Intl.NumberFormat('en-US', {
+     style: 'currency',
+     currency: 'USD',
+       minimumFractionDigits: 2
+     });
+
+    $(document).ready(function() {
+      var table = $('#clients').DataTable({
+        "paging": false,
+        "ordering": false,
+        "info": false,
+        "bFilter": false,
+        "language": {
+           "emptyTable": "No clients added yet"
+        },
+        "ajax": "portfolios",
+        "columns": [
+          { "data": "portfolioId" },
+          { "data": "clientName" },
+          { "data": "total" },
+          { "data": "loyalty" },
+          { "data": "balance"},
+          { "data": "freeTrades"}
+
+        ],
+        "columnDefs": [
+          {
+             "className": "text-center",
+             "targets": [0,1,3]
+          },
+          {
+            "render": function(data,type,row) {
+                 return '<a href="' + encodeURI('clients/' + data + '/clientpage?total=' + row.total) + '">' + data + '</a>';
+            },
+            "targets": [0]
+          },
+          {
+            "render": function(data,type,row) {
+                 return  currencyFormatter.format(data);
+            },
+            "className": "text-left",
+            "targets": [2]
+          },
+          {
+            "targets": [4,5],
+            "visible": false
+          }
+        ]
+      });
+
+      $("#cancelClientBtn").click(function() {
+        $("#addClientModal").modal("hide");
+        $('#createClientForm').removeClass('was-validated');
+        $('#createClientForm')[0].reset();
+
+      });
+
+      //var data = table.rows().data();
+
+
+      //console.log(JSON.stringify());
+
+      $("#saveClientBtn").click(function() {
+        //alert( "Handler for .click() called." );
+        $('#create-error').text('');
+        if ($("#createClientForm")[0].checkValidity() === false) {
+          //event.preventDefault();
+          //event.stopPropagation();
+          console.log('form NOT validated');
+          console.log('Data table data has ' + table.data().count() + ' rows');
+          console.log(JSON.stringify(table.data().toArray()));
+          if (!$("#createEmployeeForm").hasClass('was-validated')) {
+            console.log("adding was-validated class");
+            $("#createClientForm")[0].classList.add('was-validated');
+          }
+        } else {
+          console.log('form validated');
+
+          //$("#createEmployee")[0].classList.add('was-validated');
+         $(this).prop("disabled", true);
+         $(this).html(
+           '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing ...'
+         );
+         const newClient = {
+           "firstName": $('#firstName').val(),
+           "lastName": $('#lastName').val(),
+           "email": $('#email').val(),
+           "phone": $('#phoneNumber').val(),
+           "preferredContactMethod": $('#preferredContactMethodSelect').val()
+         };
+         $.ajax({
+              url: 'portfolios',
+              dataType: 'json',
+              type: 'post',
+              contentType: 'application/json',
+              data: JSON.stringify(newClient),
+              success: function( data, textStatus, jQxhr ){
+                  console.log('New client created');
+                  $('#addClientModal').modal('hide');
+                  table.ajax.reload();
+                  $('#createClientForm')[0].reset();
+                  $('#saveClientBtn').prop("disabled", false);
+                  $('#saveClientBtn').text('Save');
+
+              },
+              error: function( jqXhr, textStatus, errorThrown ){
+                  console.log('Error on create: ' + errorThrown );
+                  $('#create-error').text('Error on create: ' + errorThrown);
+                  $('#saveClientBtn').prop("disabled", false);
+                  $('#saveClientBtn').text('Save');
+              }
+          });
+
+        }
+      });
+    });
+  </script>
+
+
+</body>
+
+</html>

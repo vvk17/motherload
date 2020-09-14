@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>ACME Stock Co Client 2</title>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="font-awesome-5.1.2/css/all.css">
+  <script src="font-awesome-5.1.2/js/all.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="banner-txt-bold float-left"><span>
+              <h6><strong>ACME Stock Co</strong></h6>
+            </span></div>
+        </div>
+
+        <div class="col-md-8">
+          <div class="banner-txt float-right"><span> <i class="fas fa-user" style="color:white"></i></span><span>&nbsp;&nbsp;Demo User</span>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span> <i class="fas fa-cog" style="color:white"></i></span><span>&nbsp;&nbsp;Settings</span>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span> <i class="fas fa-question" style="color:white"></i></span><span>&nbsp;&nbsp;Help</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row"><span>&nbsp;</span>
+    </div>
+    <div class="row">
+      <div class="col-md-12 pt-3 pb-4 mb-4" style="background-color: #f1f4f4">
+        <span><a href="#">
+            <i class="fas fa-arrow-left fa-2x" style="color:#256dd3" aria-hidden="true"></i>
+          </a></span>
+        <span style="color:#1b2e4e; font-size: 32px; font-weight:normal;">&nbsp; | Client 2 </span>
+      </div>
+    </div>
+    <div class="row"><span>&nbsp;</span>
+    </div>
+
+    <div class="row">
+      <ul class="nav nav-pills" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" href="#portfolio" role="tab">Portfolio Overview</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#clientdetails" role="tab">Client Details</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+
+  <!-- Tab panes -->
+  <div class-"row">
+    <div class="tab-content">
+      <div class="tab-pane active" id="portfolio" role="tabpanel">
+        <div class="container" style="background-color: #f1f4f4">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="container pl-3  pr-3 pt-5 pb-5">
+                <div class="col-md-12 border shadow bg-light rounded">
+                  <div class="row pt-3 px-3">
+                    <div class="col-md-4">
+                      <h6 class="text-center"><strong>PORTFOLIO VALUE</strong></h6>
+                    </div>
+                    <div class="col-md-4">
+                      <h6 class="text-center"><strong>CASH BALANCE</strong></h6>
+                    </div>
+                    <div class="col-md-4">
+                      <h6 class="text-center"><strong>ROI</strong></h6>
+                    </div>
+                  </div>
+
+                  <div class="row pt-3 px-3">
+                    <div class="col-md-4">
+                      <div class="portfolio-value">
+                        <p class="text-center">$0.00</p>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="portfolio-value">
+                        <p class="text-center">$0.00</p>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="portfolio-ytd">
+                        <p class="text-center">0%</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row pt-6 px-3">
+                    <div class="col-md-6">
+                      <h6><strong>Stock Portfolio</strong></h6>
+                    </div>
+                  </div>
+
+                  <div class="row pt-6 pb-3">
+                    <div class="col-md-12">
+                      <div class="custom-hr-dark">.</div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="mx-2 pb-3">
+                        <table id="portfolio-table" class="display" style="width:100%">
+                          <thead>
+                            <tr>
+                              <th class="text-center">Symbol</th>
+                              <th>Shares</th>
+                              <th>Commision</th>
+                              <th>Price</th>
+                              <th>Date Quoted</th>
+                              <th>Total</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td class="text-center">IBM</td>
+                              <td>100</td>
+                              <td>$7.99</td>
+                              <td>$155.31</td>
+                              <td>2020-02-12</td>
+                              <td>$15,531.00</td>
+                            </tr>
+                            <tr>
+                              <td class="text-center">AAPL</td>
+                              <td>100</td>
+                              <td>$7.99</td>
+                              <td>$155.31</td>
+                              <td>2020-02-12</td>
+                              <td>$15,531.00</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row pb-3 pt-3">
+                    <div class="col-md-6">
+                      <div class="float-md-left">
+                        <button id="feedback" type="button" class="btn btn-outline-primary custom-btn">Feedback <i class="fas fa-comments" style="color:#007bff"></i></button>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="float-md-right">
+                        <button id="sell" type="button" class="btn btn-outline-primary custom-btn">Sell Stock</button>
+                        <button id="buy" type="button" class="btn btn-primary custom-btn">Buy Stock</button>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane" id="clientdetails" role="tabpanel">
+        <div class="container" style="background-color: #f1f4f4">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="container pl-3  pr-3 pt-5 pb-5">
+                <div class="col-md-12 border shadow bg-light rounded">
+                  <div class="row">
+                    <div class="col-md-4 pt-4 text-right">
+                      <h6><strong>Name</strong></h6>
+                    </div>
+                    <div class="col-md-8 pt-4 text-left">
+                      <span>Client 2</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 text-right">
+                      <h6><strong>Email</strong></h6>
+                    </div>
+                    <div class="col-md-8 text-left">
+                      <span>client.2@anyco.com</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 text-right">
+                      <h6><strong>Cell Phone</strong></h6>
+                    </div>
+                    <div class="col-md-8 text-left">
+                      <span>1-512-555-1212</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 text-right">
+                      <h6><strong>Preferred Contact Method</strong></h6>
+                    </div>
+                    <div class="col-md-8 text-left">
+                      <span>Text message</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 text-right">
+                      <h6><strong>Loyalty Level</strong></h6>
+                    </div>
+                    <div class="col-md-8 text-left">
+                      <span>Basic</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 text-right">
+                      <h6><strong>Account Balance</strong></h6>
+                    </div>
+                    <div class="col-md-8 text-left">
+                      <span>$50.00</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 text-right">
+                      <h6><strong>Commissions Paid</strong></h6>
+                    </div>
+                    <div class="col-md-8 text-left">
+                      <span>$0.00</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 text-right">
+                      <h6><strong>Commission for Next Trade</strong></h6>
+                    </div>
+                    <div class="col-md-8 text-left">
+                      <span>$9.99</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 pb-4 text-right">
+                      <h6><strong>Free Trades Available</strong></h6>
+                    </div>
+                    <div class="col-md-8 pb-4 text-left">
+                      <span>0</span>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-12 pt-3 pb-3" style="background-color: #e1e4e4; font:smaller">
+                      <span>Retrieved 02/12/2020 7:21:45 AM</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <script>
+    $(document).ready(function() {
+      $('#portfolio-table').DataTable({
+        "paging": false,
+        "ordering": false,
+        "info": false,
+        "bFilter": false
+      });
+    });
+  </script>
+
+</body>
+
+</html>

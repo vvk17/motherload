@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<!--
+  Copyright 2020 IBM All Rights Reserved.
+
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+ -->
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>ACME Stock Co Client Details</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="/tradr/css/style.css">
+  <link rel="stylesheet" href="/tradr/font-awesome-5.1.2/css/all.css">
+  <script src="/tradr/font-awesome-5.1.2/js/all.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"  crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"  crossorigin="anonymous"></script>
+
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="banner-txt-bold float-left"><span>
+              <h6><strong>ACME Stock Co</strong></h6>
+            </span></div>
+        </div>
+
+        <div class="col-md-8">
+          <div class="banner-txt float-right"><span> <i class="fas fa-user" style="color:white"></i></span><span>&nbsp;&nbsp;Demo User</span>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span> <i class="fas fa-cog" style="color:white"></i></span><span>&nbsp;&nbsp;Settings</span>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span> <i class="fas fa-question" style="color:white"></i></span><span>&nbsp;&nbsp;Help</span>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span><a href="/tradr/logout" style="color:white"><span> <i class="fas fa-sign-out-alt"></i></span><span>&nbsp;&nbsp;Logout</span></a></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Modals -->
+
+  <div class="modal fade" id="sellErrorModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content text-center">
+        <div class="modal-header text-danger">
+          <h2 class="modal-title"><i class="fas fa-times-circle"></i>&nbsp;&nbsp;Error</h2>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>No shares in this portfolio !</p>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="sellStockModal" tabindex="-1" role="dialog" aria-labelledby="sellStockModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="sellStockModalLabel">Sell shares</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form id="sellStockForm" class="needs-validation" novalidate>
+          <div class="modal-body">
+
+            <div class="form-group">
+              <label for="symbol">Symbol</label>
+
+          <select id="sellSelect" class="selectpicker form-control"  data-width="100%">
+
+
+          </select>
+            </div>
+            <div class="form-group">
+              <label for="sellshares">Number of shares</label>
+              <input id="sellshares" type="text" name="sellshares" pattern="^[0-9]*$" class="form-control" required />
+
+              <div class="invalid-feedback">
+                Please enter a valid number of shares.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <span id="sell-error" class="text-danger"></span>
+            </div>
+
+          </div>
+
+          <div class="modal-footer">
+
+            <button id="sellFormBtn" type="button" class="btn btn-primary">Sell shares</button>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="buyStockModal" tabindex="-1" role="dialog" aria-labelledby="buyStockModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="buyStockModalLabel">Buy shares</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form id="buyStockForm" class="needs-validation" novalidate>
+          <div class="modal-body">
+
+            <div class="form-group">
+              <label for="buySelect">Company</label>
+
+          <select id="buySelect" class="selectpicker form-control"  data-width="100%">
+            <option value="AXP">American Express Co</option>
+            <option value="AAPL">Apple Inc</option>
+            <option value="BA">Boeing Co</option>
+            <option value="CAT">Caterpillar Inc</option>
+            <option value="CSCO">Cisco Systems</option>
+            <option value="CVX">Chevron Corp</option>
+            <option value="XOM">Exxon Mobil Corp</option>
+            <option value="GS">Goldman Sachs Group Inc</option>
+            <option value="BA">Boeing Co</option>
+            <option value="HD">Home Depot Inc</option>
+            <option value="IBM" selected>International Business Machines Corp</option>
+            <option value="INTC">Intel Corp</option>
+            <option value="JNJ">Johnson & Johnson</option>
+            <option value="KO">Coca-Cola Co</option>
+            <option value="JPM">JPMorgan Chase & Co</option>
+            <option value="MCD">McDonald's Corp</option>
+            <option value="MMM">3M Co</option>
+            <option value="MRK">Merck & Co Inc</option>
+            <option value="MSFT">Microsoft Corp</option>
+            <option value="NKE">Nike Inc</option>
+            <option value="PFE">Pfizer Inc</option>
+            <option value="PG">Proctor & Gamble Co</option>
+            <option value="TRV">Travelers Companies Inc</option>
+            <option value="UNH">UnitedHealth Group Inc</option>
+            <option value="UTX">United Technologies Corp</option>
+            <option value="VZ">Verizon Communications Inc</option>
+            <option value="V">Visa Inc</option>
+            <option value="WBA">Walgreens Boots Alliance Inc</option>
+            <option value="WMT">Walmart Inc</option>
+            <option value="DIS">Walt Disney Co</option>
+            <option value="DOW">Dow Inc</option>
+          </select>
+            </div>
+            <div class="form-group">
+              <label for="buyshares">Number of shares</label>
+              <input id="buyshares" type="text" name="buyshares" pattern="^[0-9]*$" class="form-control" required />
+
+              <div class="invalid-feedback">
+                Please enter a valid number of shares.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <span id="buy-error" class="text-danger"></span>
+            </div>
+
+          </div>
+
+          <div class="modal-footer">
+
+            <button id="buyFormBtn" type="button" class="btn btn-primary">Buy shares</button>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container">
+    <div class="row"><span>&nbsp;</span>
+    </div>
+    <div class="row">
+      <div class="col-md-12 pt-3 pb-4 mb-4" style="background-color: #f1f4f4">
+        <span><a href="/tradr/clients">
+            <i class="fas fa-arrow-left fa-2x" style="color:#256dd3" aria-hidden="true"></i>
+          </a></span>
+        <span style="color:#1b2e4e; font-size: 32px; font-weight:normal;">&nbsp; | Portfolio Id:&nbsp; <%=portfolioId%> &nbsp;&nbsp; Client:&nbsp; <%=clientName%> </span>
+      </div>
+    </div>
+    <div class="row"><div class="col-md-12"><h5>&nbsp;</h5></div>
+    </div>
+
+    <div class="row">
+      <ul class="nav nav-pills" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" href="#portfolio" role="tab">Portfolio Overview</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#clientdetails" role="tab">Client Details</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+
+  <!-- Tab panes -->
+  <div class-"row">
+    <div class="tab-content">
+      <div class="tab-pane active" id="portfolio" role="tabpanel">
+        <div class="container" style="background-color: #f1f4f4">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="container pl-3  pr-3 pt-5 pb-5">
+                <div class="col-md-12 border shadow bg-light rounded">
+                  <div class="row pt-3 px-3">
+                    <div class="col-md-4">
+                      <h6 class="text-center"><strong>PORTFOLIO VALUE</strong></h6>
+                    </div>
+                    <div class="col-md-4">
+                      <h6 class="text-center"><strong>CASH BALANCE</strong></h6>
+                    </div>
+                    <div class="col-md-4">
+                      <h6 class="text-center"><strong>ROI</strong></h6>
+                    </div>
+                  </div>
+
+                  <div class="row pt-3 px-3">
+                    <div class="col-md-4">
+                      <div class="portfolio-value">
+                        <p id="total" class="text-center"><%=total%></p>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="portfolio-value">
+                        <p id="balance" class="text-center"><%=balance%></p>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="portfolio-ytd">
+                        <p id="roi" class="text-center"><%=roi%></p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row pt-6 px-3">
+                    <div class="col-md-12">
+                      <p>&nbsp;</p>
+                    </div>
+                  </div>
+
+
+                  <div class="row pt-6 px-3">
+                    <div class="col-md-6">
+                      <h6><strong>Stock Portfolio</strong></h6>
+                    </div>
+                  </div>
+
+                  <div class="row pt-6 pb-3">
+                    <div class="col-md-12">
+                      <div class="custom-hr-dark">.</div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="mx-2 pb-3">
+                        <table id="portfolioTbl" class="display" style="width:100%">
+                          <thead>
+                            <tr>
+                              <th>Symbol</th>
+                              <th>Shares</th>
+                              <th>Commissions</th>
+                              <th>Price</th>
+                              <th>Last Quoted</th>
+                              <th>Total</th>
+                            </tr>
+                          </thead>
+
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row pb-3 pt-3">
+                    <div class="col-md-6">
+                      <div class="float-md-left">
+                        <button id="feedbackBtn" type="button" class="btn btn-outline-primary custom-btn">Feedback <i class="fas fa-comments" style="color:#007bff"></i></button>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="float-md-right">
+                        <button id="sellBtn" type="button" class="btn btn-outline-primary custom-btn">Sell Stock</button>
+                        <button id="buyBtn" type="button" class="btn btn-primary custom-btn">Buy Stock</button>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane" id="clientdetails" role="tabpanel">
+        <div class="container" style="background-color: #f1f4f4">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="container pl-3  pr-3 pt-5 pb-5">
+                <div class="col-md-12 border shadow bg-light rounded">
+                  <div class="row">
+                    <div class="col-md-4 pt-4 text-right">
+                      <h6><strong>Name</strong></h6>
+                    </div>
+                    <div class="col-md-8 pt-4 text-left">
+                      <span><%=clientName%></span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 text-right">
+                      <h6><strong>Email</strong></h6>
+                    </div>
+                    <div class="col-md-8 text-left">
+                      <span id="clientEmail"></span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 text-right">
+                      <h6><strong>Cell Phone</strong></h6>
+                    </div>
+                    <div class="col-md-8 text-left">
+                      <span id="clientPhone"></span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 text-right">
+                      <h6><strong>Preferred Contact Method</strong></h6>
+                    </div>
+                    <div class="col-md-8 text-left">
+                      <span id="clientContactMethod"></span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 text-right">
+                      <h6><strong>Loyalty Level</strong></h6>
+                    </div>
+                    <div class="col-md-8 text-left">
+                      <span><%=loyalty%></span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 text-right">
+                      <h6><strong>Free Trades Available</strong></h6>
+                    </div>
+                    <div class="col-md-8 text-left">
+                      <span id="clientFreeTrades"><%=freeTrades%></span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 pb-4 text-right">
+                      <h6><strong>Salesforce Contact Id</strong></h6>
+                    </div>
+                    <div class="col-md-8 pb-4 text-left">
+                      <span id="salesforceContactId"></span>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-12 pt-3 pb-3" style="background-color: #e1e4e4; font:smaller">
+                      <span>Retrieved <%=retrieved%></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <script>
+
+    const currencyFormatter = new Intl.NumberFormat('en-US', {
+     style: 'currency',
+     currency: 'USD',
+       minimumFractionDigits: 2
+     });
+
+
+     var currentSellDict;
+
+     function sell(sellRequest, table) {
+         $('#feedbackMsg').html('');
+         $.ajax({
+              url: '/tradr/portfolios',
+              dataType: 'json',
+              type: 'put',
+              contentType: 'application/json',
+              data: JSON.stringify(sellRequest),
+              success: function( data, textStatus, jQxhr ){
+                  console.log('Sell request executed');
+                  $('#sellStockModal').modal('hide');
+                  table.ajax.reload();
+                  $('#sellStockForm')[0].reset();
+                  $('#sellStockBtn').prop("disabled", false);
+                  $('#sellStockBtn').text('Sell shares');
+                  $('#total').text(currencyFormatter.format(data.total));
+                  $('#balance').text(currencyFormatter.format(data.balance));
+                  $('#clientFreeTrades').text(data.freeTrades);
+                  //$('#roi').text('Recalculating ...');
+                  //refreshROI(sellRequest.portfolioId,data.total);
+                  console.log(JSON.stringify(data));
+                  if (data.roi < 0) {
+                     if (!$('#roi').hasClass('text-danger'))
+                        $('#roi').addClass('text-danger');
+                  }
+                  else {
+                     if ($('#roi').hasClass('text-danger'))
+                        $('#roi').removeClass('text-danger');
+                  }
+                  $('#roi').text(data.roi.toFixed(2) + '%');
+
+              },
+              error: function( jqXhr, textStatus, errorThrown ){
+                  console.log('Error on create: ' + errorThrown );
+                  $('#sell-error').text('Error on sell: ' + errorThrown);
+                  $('#sellStockBtn').prop("disabled", false);
+                  $('#sellStockBtn').text('Sell shares');
+              }
+          });
+     }
+
+     function buy(buyRequest, table) {
+         console.log('Buy request');
+         console.log(JSON.stringify(buyRequest));
+         $('#feedbackMsg').html('<div class="col-md-12"><h5>&nbsp;</h5></div>');
+         $.ajax({
+              url: '/tradr/portfolios',
+              dataType: 'json',
+              type: 'put',
+              contentType: 'application/json',
+              data: JSON.stringify(buyRequest),
+              success: function( data, textStatus, jQxhr ){
+                  console.log('Buy request executed');
+                  $('#buyStockModal').modal('hide');
+                  table.ajax.reload();
+                  $('#buyStockForm')[0].reset();
+                  $('#buyStockBtn').prop("disabled", false);
+                  $('#buyStockBtn').text('Sell shares');
+                  $('#total').text(currencyFormatter.format(data.total));
+                  $('#balance').text(currencyFormatter.format(data.balance));
+                  $('#clientFreeTrades').text(data.freeTrades);
+                  //$('#roi').text('Recalculating ...');
+                  //refreshROI(buyRequest.portfolioId,data.total);
+                  if (data.roi < 0) {
+                     if (!$('#roi').hasClass('text-danger'))
+                        $('#roi').addClass('text-danger');
+                  }
+                  else {
+                     if ($('#roi').hasClass('text-danger'))
+                        $('#roi').removeClass('text-danger');
+                  }
+                  $('#roi').text(data.roi.toFixed(2) + '%');
+                  console.log(JSON.stringify(data));
+              },
+              error: function( jqXhr, textStatus, errorThrown ){
+                  console.log('Error on create: ' + errorThrown );
+                  $('#buy-error').text('Error on buy: ' + errorThrown);
+                  $('#buyStockBtn').prop("disabled", false);
+                  $('#buyStockBtn').text('Buy shares');
+              }
+          });
+     }
+
+
+
+     function clientDetails(portfolioId) {
+       $.ajax({
+            url: '/tradr/clients/' + portfolioId,
+            type: 'get',
+            contentType: 'application/json',
+            success: function( data, textStatus, jQxhr ){
+
+                $('#clientEmail').text(data.email);
+                $('#clientContactMethod').text(data.preferredContactMethod);
+                $('#clientPhone').text(data.phone);
+                if (data.contactId === 'N/A')
+                   $('#salesforceContactId').text(data.contactId);
+                else
+                   $('#salesforceContactId').html('<a href="https://na174.salesforce.com/' + data.contactId + '">' + data.contactId + '</a>');
+                console.log('Client details received');
+                console.log(JSON.stringify(data));
+            },
+            error: function( jqXhr, textStatus, errorThrown ){
+                console.log('Error on clientDetails: ' + errorThrown );
+            }
+        });
+     }
+
+
+    $(document).ready(function() {
+
+      if ($('#roi').text().startsWith("-")) {
+         $('#roi').addClass('text-danger');
+      }
+
+      const cpidx= window.location.href.indexOf("/clientpage");
+      var portfolioId = 0;
+      if (cpidx > 0) {
+         const ctsidx = window.location.href.indexOf("/clients/");
+         if (ctsidx < 0) {
+           console.log("Error: no portfolioId passed in the URL !!!");
+         }
+         else {
+            portfolioId = parseInt(window.location.href.substring(ctsidx + 9, cpidx));
+            console.log("PortfolioID from URL = " + portfolioId);
+         }
+      }
+      else
+         console.log("Error: no portfolioId passed in the URL !!!");
+
+      var table = $('#portfolioTbl').DataTable({
+        "paging": false,
+        "ordering": false,
+        "info": false,
+        "bFilter": false,
+        "language": {
+           "emptyTable": "No stocks in this porfolio"
+        },
+        "ajax": "/tradr/portfolios/<%=portfolioId%>/stocks",
+        "columns": [
+          { "data": "symbol" },
+          { "data": "shares" },
+          { "data": "commission" },
+          { "data": "price" },
+          { "data": "lastQuoted" },
+          { "data": "total" }
+        ],
+        "columnDefs": [
+          {
+             "className": "text-center",
+             "targets": [0,1,4]
+          },
+          {
+            "render": function(data,type,row) {
+                 return  currencyFormatter.format(data);
+            },
+            "className": "text-left",
+            "targets": [2,3,5]
+          }
+        ]
+      });
+
+      clientDetails(portfolioId);
+
+      $("#sellBtn").click(function() {
+         console.log('Data table data has ' + table.data().count() + ' rows');
+         if (table.data().count() > 0) {
+            var selectHTML = "";
+            currentSellDict = {};
+            var stocks = table.data().toArray();
+            for (i=0; i<stocks.length; i++) {
+                 currentSellDict[stocks[i].symbol] = stocks[i].shares;
+                 if (i == 0)
+                    selectHTML += "<option selected>" + stocks[i].symbol + "</option>\n";
+                 else
+                    selectHTML += "<option>" + stocks[i].symbol + "</option>\n";
+            }
+            $('#sellSelect').html(selectHTML);
+            $('#sell-error').text("");
+            $('#sellStockForm')[0].reset();
+            $('#sellFormBtn').text('Sell shares');
+            $('#sellFormBtn').prop("disabled", false);
+            $('#sellStockModal').modal('show');
+         }
+         else
+             $('#sellErrorModal').modal('show');
+      });
+
+
+      $("#buyBtn").click(function() {
+
+          $('#buy-error').text("");
+          $('#buyStockForm')[0].reset();
+          $('#buyFormBtn').text('Buy shares');
+          $('#buyFormBtn').prop("disabled", false);
+          $('#buyStockModal').modal('show');
+
+      });
+
+
+      $("#sellFormBtn").click(function() {
+        //alert( "Handler for .click() called." );
+        if ($("#sellStockForm")[0].checkValidity() === false) {
+          //event.preventDefault();
+          //event.stopPropagation();
+          console.log('form NOT validated');
+
+          if (!$("#sellStockForm").hasClass('was-validated')) {
+            console.log("adding was-validated class");
+            $("#sellStockForm")[0].classList.add('was-validated');
+          }
+        } else {
+          console.log('form validated');
+
+          //$("#createEmployee")[0].classList.add('was-validated');
+         $(this).prop("disabled", true);
+         $(this).html(
+           '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing ...'
+         );
+         const sellRequest = {
+           "shares": (-parseInt($('#sellshares').val())),
+           "symbol": $('#sellSelect').val(),
+           "portfolioId": portfolioId
+         };
+         if (currentSellDict[sellRequest.symbol] < sellRequest.shares) {
+            $('#sell-error').text("Error: Invalid amount of shares -  only " + currentSellDict[sellRequest.symbol] + " are in the portfolio");
+         }
+         else {
+           sell(sellRequest, table);
+         }
+
+
+        }
+      });
+
+      $("#buyFormBtn").click(function() {
+        //alert( "Handler for .click() called." );
+        if ($("#buyStockForm")[0].checkValidity() === false) {
+          //event.preventDefault();
+          //event.stopPropagation();
+          console.log('form NOT validated');
+
+          if (!$("#buyStockForm").hasClass('was-validated')) {
+            console.log("adding was-validated class");
+            $("#buyStockForm")[0].classList.add('was-validated');
+          }
+        } else {
+          console.log('form validated');
+
+          //$("#createEmployee")[0].classList.add('was-validated');
+         $(this).prop("disabled", true);
+         $(this).html(
+           '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing ...'
+         );
+         const buyRequest = {
+           "shares": parseInt($('#buyshares').val()),
+           "symbol": $('#buySelect').val(),
+           "portfolioId": portfolioId
+         };
+
+         buy(buyRequest, table);
+
+
+        }
+      });
+
+
+
+
+    });
+  </script>
+
+</body>
+
+</html>
