@@ -70,9 +70,9 @@ app.get('/tradr/logout', function(request, response) {
 });
 
 
-app.post('/tradr/echo', function(request, response) {
+app.get('/tradr/echo', function(request, response) {
   console.log('Here');
-  response.send(request.body);
+  response.send('Hello World!');
 });
 
 // Handle POST request to authorize user
