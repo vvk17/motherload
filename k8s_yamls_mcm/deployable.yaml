@@ -25,6 +25,23 @@ spec:
             - name: motd
               image: __IMAGE__
               imagePullPolicy: Always
+              env:
+                - name: STOCK_QUOTE_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: acmetrader-config
+                      key: stockQuote.url
+                      optional: true
+                - name: TRADE_HISTORY_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: acmetrader-config
+                      key: tradeHistory.url
+                - name: PORTFOLIO_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: acmetrader-config
+                      key: portfolio.url
               livenessProbe:
                 tcpSocket:
                   port: 3000
