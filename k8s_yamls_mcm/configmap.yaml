@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: acmetrader-config
+data:
+  stockQuote.url: "http://www.ibm.com"
+  tradeHistory.url: "http://www.ibm.com"
+  portfolio.url: "http://www.ibm.com"
