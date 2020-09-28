@@ -3,14 +3,14 @@ kind: Deployable
 metadata:
   annotations:
     app.ibm.com/is-local-deployable: "false"
-  name: acmetrader-config
+  name: labX-tradr-config
 spec:
   template:
     apiVersion: v1
     kind: ConfigMap
     metadata:
-      name: acmetrader-config
+      name: labX-tradr-config
     data:
-      stockQuote.url: "http://www.ibm.com"
-      tradeHistory.url: "http://www.ibm.com"
-      portfolio.url: "http://www.ibm.com"
+      stockQuote.url: "stockquote.com"
+      tradeHistory.url: "tradehistory.com"
+      portfolio.url: "portfolio.com"
