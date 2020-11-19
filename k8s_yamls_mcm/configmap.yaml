@@ -3,13 +3,13 @@ kind: Deployable
 metadata:
   annotations:
     app.ibm.com/is-local-deployable: "false"
-  name: lab2-tradr-config
+  name: labX-tradr-config
 spec:
   template:
     apiVersion: v1
     kind: ConfigMap
     metadata:
-      name: lab2-tradr-config
+      name: labX-tradr-config
     data:
       stockQuote.url: "stockquote.com"
       tradeHistory.url: "tradehistory.com"
