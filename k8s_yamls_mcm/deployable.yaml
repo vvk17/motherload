@@ -3,44 +3,44 @@ kind: Deployable
 metadata:
   annotations:
     app.ibm.com/is-local-deployable: "false"
-  name: labX-tradr-deploy
+  name: labx-tradr-deploy
 spec:
   template:
     apiVersion: apps/v1
     kind: Deployment
     metadata:
-      name: labX-tradr-deployment
+      name: labx-tradr-deployment
     spec:
       replicas: 1
       selector:
         matchLabels:
-          app: labX-tradr
+          app: labx-tradr
       template:
         metadata:
-          name: labX-tradr
+          name: labx-tradr
           labels:
-            app: labX-tradr
+            app: labx-tradr
         spec:
           containers:
-            - name: labX-tradr
+            - name: labx-tradr
               image: __IMAGE__
               imagePullPolicy: Always
               env:
                 - name: STOCK_QUOTE_URL
                   valueFrom:
                     configMapKeyRef:
-                      name: labX-tradr-config
+                      name: labx-tradr-config
                       key: stockQuote.url
                       optional: true
                 - name: TRADE_HISTORY_URL
                   valueFrom:
                     configMapKeyRef:
-                      name: labX-tradr-config
+                      name: labx-tradr-config
                       key: tradeHistory.url
                 - name: PORTFOLIO_URL
                   valueFrom:
                     configMapKeyRef:
-                      name: labX-tradr-config
+                      name: labx-tradr-config
                       key: portfolio.url
               livenessProbe:
                 tcpSocket:
